@@ -1,0 +1,191 @@
+<div class="jumbotron text-center">
+  <h1 class="display-5">
+    Angular 7 Reactive Forms Tutorial
+  </h1>
+</div>
+
+<div class="container">
+  <div class="row custom-wrapper">
+    <div class="col-md-12">
+
+      <!-- Form starts -->
+      <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+
+        <div class="group-gap">
+
+          <!-- Upload image -->
+          <div class="avatar-upload">
+            <div class="avatar-edit">
+              <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" #fileInput (change)="uploadFile($event)" />
+              <label for="imageUpload" *ngIf="editFile" [ngClass]="['custom-label', 'upload-image']"></label>
+              <label *ngIf="removeUpload" [ngClass]="['custom-label', 'remove-image']" (click)="removeUploadedFile()"></label>
+            </div>
+            <div class="avatar-preview">
+              <div id="imagePreview" [style.backgroundImage]="'url('+ imageUrl +')'">
+              </div>
+            </div>
+          </div>
+
+          <!-- Full name -->
+          <div formGroupName="fullName">
+            <div class="mb-3">
+              <label [ngClass]="{'error': submitted && myForm.fullName.controls.firstName.errors}">
+                Nombre</label>
+              <input type="text" class="form-control" formControlName="firstName" [ngClass]="{'error': submitted && myForm.fullName.controls.firstName.errors}">
+              <!-- error block -->
+              <div class="invalid-feedback" *ngIf="submitted && myForm.fullName.controls.firstName.errors?.required">
+                <sup>*</sup>Ingresa tu nombre
+              </div>
+              <div class="invalid-feedback" *ngIf="submitted && myForm.fullName.controls.firstName.errors?.minlength">
+                <sup>*</sup>El nombre debe tener 2 caracteres
+              </div>
+              <div class="invalid-feedback" *ngIf="submitted && myForm.fullName.controls.firstName.errors?.pattern">
+                <sup>*</sup>No se admiten caracteres especiales
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label [ngClass]="{'error': submitted && myForm.fullName.controls.lastName.errors}">
+                Apellido</label>
+              <input type="text" class="form-control" formControlName="lastName" [ngClass]="{'error': submitted && myForm.fullName.controls.lastName.errors}">
+              <!-- error block -->
+              <div class="invalid-feedback" *ngIf="submitted && myForm.fullName.controls.lastName.errors?.required">
+                <sup>*</sup>Ingrese su apellido
+              </div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label [ngClass]="{'error': submitted && myForm.email.errors}">Email</label>
+            <input type="email" class="form-control" formControlName="email" [ngClass]="{'error': submitted && myForm.email.errors}">
+
+            <!-- error block -->
+            <div class="invalid-feedback" *ngIf="submitted && myForm.email.errors?.required">
+              <sup>*</sup>Ingrese su correo electrónico
+            </div>
+            <div class="invalid-feedback" *ngIf="submitted && myForm.email.errors?.pattern">
+              <sup>*</sup>Ingrese un correo válido
+            </div>
+          </div>
+
+          <!-- Phone number -->
+          <div class="mb-3">
+            <label [ngClass]="{'error': submitted && myForm.phoneNumber.errors}">Número de Teléfono</label>
+            <input type="text" class="form-control" formControlName="phoneNumber" [ngClass]="{'error': submitted && myForm.phoneNumber.errors}">
+
+            <!-- error block -->
+            <div class="invalid-feedback" *ngIf="submitted && myForm.phoneNumber.errors?.maxLength">
+              <sup>*</sup>El número de teléfono debe tener 10 dígitos
+            </div>
+            <div class="invalid-feedback" *ngIf="submitted && myForm.phoneNumber.errors?.required">
+              <sup>*</sup>Ingrese su Teléfono
+            </div>
+            <div class="invalid-feedback" *ngIf="submitted && myForm.phoneNumber.errors?.pattern">
+              <sup>*</sup>Ingrese un número de teléfono válido
+            </div>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="group-gap" formGroupName="address">
+          <h5 class="mb-3">Dirección</h5>
+          <div class="mb-3">
+            <label [ngClass]="{'error': submitted && myForm.address.controls.street.errors}">Calle</label>
+            <input type="text" class="form-control" formControlName="street" [ngClass]="{'error': submitted && myForm.address.controls.street.errors}">
+
+            <!-- error block -->
+            <div class="invalid-feedback" *ngIf="submitted && myForm.address.controls.street.errors?.required">
+              <sup>*</sup>Por favor ingrese su calle
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label [ngClass]="{'error': submitted && myForm.address.controls.city.errors}">Ciudad</label>
+            <input type="text" class="form-control" formControlName="city" [ngClass]="{'error': submitted && myForm.address.controls.city.errors}">
+
+            <!-- error block -->
+            <div class="invalid-feedback" *ngIf="submitted && myForm.address.controls.city.errors?.required">
+              <sup>*</sup>Por favor ingrese su ciudad
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label [ngClass]="{'error': submitted && myForm.address.controls.cityName.errors}">Estado</label>
+            <select class="custom-select d-block w-100" (change)="changeCity($event)" formControlName="cityName"
+              [ngClass]="{'error': submitted && myForm.address.controls.cityName.errors}">
+              <option value="">Escoge...</option>
+              <option *ngFor="let city of City" [ngValue]="city">{{city}}</option>
+            </select>
+
+            <!-- error block -->
+            <div class="invalid-feedback" *ngIf="submitted && myForm.address.controls.cityName.errors?.required">
+              <sup>*</sup>Por Favor ingrese su ciudad
+            </div>
+          </div>
+        </div>
+
+        <!-- Gender -->
+        <div class="group-gap">
+          <h5 class="mb-3">Género</h5>
+          <div class="d-block my-3">
+            <div class="custom-control custom-radio">
+              <input id="male" type="radio" class="custom-control-input" name="gender" formControlName="gender" value="male"
+                checked>
+              <label class="custom-control-label" for="male">Masculino</label>
+            </div>
+
+            <div class="custom-control custom-radio">
+              <input id="female" type="radio" class="custom-control-input" name="gender" formControlName="gender" value="female">
+              <label class="custom-control-label" for="female">Femenino</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div formGroupName="PasswordValidation">
+          <div class="group-gap">
+            <div class="mb-3">
+              <label [ngClass]="{'error': submitted && myForm.PasswordValidation.controls.password.errors}">Contraseña</label>
+              <input type="password" class="form-control" formControlName="password" [ngClass]="{'error': submitted && myForm.PasswordValidation.controls.password.errors}">
+
+              <!-- error block -->
+              <div class="invalid-feedback" *ngIf="submitted && myForm.PasswordValidation.controls.password.errors">
+                <sup>*</sup>Por favor ingrese contraseña
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label [ngClass]="{'error': submitted && myForm.PasswordValidation.controls.confirmPassword.errors}">Confirma
+                Contraseña</label>
+              <input type="password" class="form-control" formControlName="confirmPassword" [ngClass]="{'error': submitted && myForm.PasswordValidation.controls.confirmPassword.errors}">
+            </div>
+
+            <!-- error block -->
+            <div class="invalid-feedback" *ngIf="submitted && myForm.PasswordValidation.controls.confirmPassword.errors">
+              <sup>*</sup>Contraseña Incorrecta
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Super Powers Dynamically-->
+        <div class="group-gap" formArrayName="addDynamicElement">
+          <h5 class="mb-3">Añade Superpoderes</h5>
+          <div class="mb-3">
+            <button type="button" class="btn btn-sm btn-success mb-3 btn-block" (click)="addSuperPowers()">Añade Poderes</button>
+            <ul class="subjectList">
+              <li *ngFor="let item of addDynamicElement.controls; let i = index">
+                <input type="text" class="form-control" [formControlName]="i">
+              </li>
+            </ul>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-danger btn-lg btn-block">Crear Superhero</button>
+        </div>
+
+      </form><!-- Form ends -->
+
+    </div>
+  </div>
+</div>
